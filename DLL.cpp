@@ -1,21 +1,24 @@
-﻿// DLL.cpp : 定義 DLL 的匯出函式。
-//
+#include <windows.h>
 
-#include "framework.h"
-#include "DLL.h"
+//=============================================================================
+// 裁判類別：負責辨識卡牌點數與數字是否對應
+//=============================================================================
+class Referee {
+public:
+    // 傳入卡牌點數 (1~13) 與 右側目標數字 (1~13)
+    // 如果對應正確回傳 true，不正確回傳 false
+    bool CheckMatch(int cardValue, int targetValue) {
+        if (cardValue == targetValue) {
+            return true; // 點數與右側數字對應正確
+        }
+        return false;
+    }
+};
 
-
-// 這是匯出變數的範例
-DLL_API int nDLL=0;
-
-// 這是匯出函式的範例。
-DLL_API int fnDLL(void)
-{
-    return 0;
-}
-
-// 這是已匯出的類別建構函式。
-CDLL::CDLL()
-{
-    return;
+//=============================================================================
+// 加上 __declspec(dllexport) 就可以直接導出函數，不需要額外的 .def 檔案
+//=============================================================================
+extern "C" __declspec(dllexport) bool check(int cardValue, int targetValue) {
+    Referee referee;
+    return referee.CheckMatch(cardValue, targetValue);
 }
